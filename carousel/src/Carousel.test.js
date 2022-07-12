@@ -2,7 +2,7 @@ import { render, fireEvent } from "@testing-library/react";
 import Carousel from "./Carousel";
 import TEST_IMAGES from "./_testCommon.js";
 
-it("renders without crashing (smoke test)", function (){
+it("renders without crashing (smoke test)", function () {
   console.log("running carousel smoke test");
   render(
     <Carousel
@@ -12,9 +12,9 @@ it("renders without crashing (smoke test)", function (){
   );
 });
 
-it("matches snapshot", function (){
+it("matches snapshot", function () {
   console.log("running carousel snapshot test");
-  const { container } =  render(
+  const { container } = render(
     <Carousel
       photos={TEST_IMAGES}
       title="images for testing"
@@ -23,7 +23,7 @@ it("matches snapshot", function (){
   expect(container).toMatchSnapshot();
 });
 
-it("works when you click on the right arrow", function() {
+it("works when you click on the right arrow", function () {
   console.log("running carousel right arrow test");
   const { container } = render(
     <Carousel
@@ -52,7 +52,7 @@ it("works when you click on the right arrow", function() {
   ).toBeInTheDocument();
 });
 
-it("works when you click on the left arrow", function() {
+it("works when you click on the left arrow", function () {
   console.log("running carousel left arrow test");
   const { container } = render(
     <Carousel
@@ -79,6 +79,41 @@ it("works when you click on the left arrow", function() {
 
 });
 
+it("no left arrow displayed on page 1", function () {
+  const { container } = render(
+    <Carousel
+      photos={TEST_IMAGES}
+      title="images for testing"
+    />
+  );
+  // expect the first image to show, and no left arrow
+  expect(
+    container.querySelector('img[alt="testing image 1"]')
+  ).toBeInTheDocument();
+  expect(
+    container.querySelector(".bi-arrow-left-circle")
+  ).not.toBeInTheDocument();
+});
 
 
+it("no right arrow displayed on page 3", function () {
+  const { container } = render(
+    <Carousel
+      photos={TEST_IMAGES}
+      title="images for testing"
+    />
+  );
+  //move 2 images forward in the carousel
+  const rightArrow = container.querySelector(".bi-arrow-right-circle");
+  fireEvent.click(rightArrow);
+  fireEvent.click(rightArrow);
+
+  // expect the third image to show, and no right arrow
+  expect(
+    container.querySelector('img[alt="testing image 3"]')
+  ).toBeInTheDocument();
+  expect(
+    container.querySelector(".bi-arrow-right-circle")
+  ).not.toBeInTheDocument();
+});
 
